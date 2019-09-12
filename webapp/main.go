@@ -9,7 +9,6 @@ import (
 func Run() {
     generateLogging()
     createDatabaseTable()
-    redisIndex()
     db := dbConn()
     mysql := dbcheck.NewMySQLChecker(db)
     handler := health.NewHandler()
