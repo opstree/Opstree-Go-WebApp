@@ -1,4 +1,4 @@
-# OT-Go-WebApp
+# Opstree-Go-WebApp
 
 The main goal of creating this sample Golang application is to provide an environment and idea of Golang Application's **build**, **test** and **deploy** phase.
 
