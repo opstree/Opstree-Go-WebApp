@@ -28,7 +28,6 @@ const htmltemplate=`{{ define "Index" }}
   </table>
 {{ template "Footer" }}
 {{ end }}
-
 {{ define "Header" }}
 <!DOCTYPE html>
 <html lang="en-US">
@@ -55,20 +54,17 @@ const htmltemplate=`{{ define "Index" }}
     <h2><strong><center>Opstree Golang Sample Crud Application</center></strong></h2>
     <img src="https://res.cloudinary.com/practicaldev/image/fetch/s--3rFO85cD--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://thepracticaldev.s3.amazonaws.com/i/bkv3xbjb74epempcjone.gif" style="width:256px;height:256px;text-align:center;">
 {{ end }}
-
 {{ define "Footer" }}
 </div>
     </body>
 </html>
 {{ end }}
-
 {{ define "Menu" }}
 <br></br>
 <a href="/"><strong>HOME</strong></a> | 
 <a href="/new"><strong>NEW</strong></a>
 <br></br>
 {{ end }}
-
 {{ define "Show" }}
   {{ template "Header" }}
     {{ template "Menu"  }}
@@ -93,7 +89,6 @@ const htmltemplate=`{{ define "Index" }}
     </table>
   {{ template "Footer" }}
 {{ end }}
-
 {{ define "New" }}
   {{ template "Header" }}
     {{ template "Menu" }}  
@@ -122,7 +117,6 @@ const htmltemplate=`{{ define "Index" }}
     </form>
   {{ template "Footer" }}
 {{ end }}
-
 {{ define "Edit" }}
   {{ template "Header" }}
     {{ template "Menu" }} 
