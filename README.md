@@ -4,7 +4,7 @@ The main goal of creating this sample Golang application is to provide an enviro
 
 **The application looks likes this:-**
 
-![](./img/app.png)
+![](./img/ot-go-webapp.png)
 
 ## Requirments
 
@@ -21,9 +21,9 @@ OT Go-App is a CRUD application which provides a Web UI Interface for Employee M
 - It provides functionality of auto-reconnection of database
 - Generates log file for access log and error in */var/log*
     - Access logs will lies in `/var/log/ot-go-webapp.access.log`
-![](./img/access_log.png)
+![](./img/ot-go-webapp-logging.png)
     - Error logs will lies in `/var/log/ot-go-webapp.error.log`
-![](./img/error_log.png)
+![](./img/ot-go-webapp-error.png)
 - We can pass the database credentials via properties file or environment variables
 - For properties file we have to store `database.properties` at this location `/etc/conf.d/ot-go-webapp/application.ini` and the content should be something like this :-
 
@@ -62,18 +62,20 @@ The folder structure of the codebase looks like this:-
 
 ```s
 ot-go-webapp
-├── Dockerfile       ---> Dockerfile to dockerize the complete application
-├── Gopkg.lock       ---> Automated generated file by dep dependency manager
-├── Gopkg.toml       ---> Automated generated file by dep dependency manager
-├── main.go          ---> Main function file to call all the function
-├── main_test.go     ---> Test case for main function calling
-├── README.md        ---> The file which you are going through right now
-└── webapp           ---> Actual codebase for webapp folder
-    ├── main.go      ---> Main file for calling webapps functions
-    ├── main_test.go ---> Main webapp test cases file
-    ├── sql.go       ---> This file holds all the sql functionalities related stuff
-    ├── sql_test.go  ---> Test cases file for sql functionalities
-    └── template.go  ---> This file has the HTML template for Web Interface
+├── Dockerfile        ---> Dockerfile to dockerize the complete application
+├── Gopkg.lock        ---> Automated generated file by dep dependency manager
+├── Gopkg.toml        ---> Automated generated file by dep dependency manager
+├── main.go           ---> Main function file to call all the function
+├── main_test.go      ---> Test case for main function calling
+├── README.md         ---> The file which you are going through right now
+└── webapp            ---> Actual codebase for webapp folder
+    ├── main.go       ---> Main file for calling webapps functions
+    ├── main_test.go  ---> Main webapp test cases file
+    ├── redis.go      ---> This file holds all the 
+    ├── redis_test.go ---> Test cases for redis caching functionalities
+    ├── sql.go        ---> This file holds all the sql functionalities related stuff
+    ├── sql_test.go   ---> Test cases file for sql functionalities
+    └── template.go   ---> This file has the HTML template for Web Interface
 ```
 
 ## Building Application
@@ -126,20 +128,20 @@ Now you will be able to access the app at http://<your_server_ip>:8080/ and heal
 
 #### For dockerized environment
 
-First we have to run the mysql container
+First we have to run the mysql and redis container
 
 ```shell
 docker run -itd --name mysql -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=employeedb mysql:5.6
+docker run -itd --name redis redis:latest
 ```
 
 Once the mysql container is created, we have to start the application
 
 ```shell
-docker run -itd --name application --link mysql:mysql -e DB_USER=root -e DB_PASSWORD=password -e DB_URL=mysql -e DB_PORT=3306 opstreedevops/ot-go-webapp:latest
+docker run -itd --name application --link mysql:mysql -e DB_USER=root -e DB_PASSWORD=password -e DB_URL=mysql -e DB_PORT=3306 -e REDIS_HOST=redis -e REDIS_PORT=6379 opstreedevops/ot-go-webapp:latest
 ```
 
 ## To Do
-
 - [X] Implement logging
 - [X] Add more fields for employee
 - [X] Write unit tests
@@ -148,11 +150,12 @@ docker run -itd --name application --link mysql:mysql -e DB_USER=root -e DB_PASS
 - [ ] Fill README with more information
 - [X] Make application more attractive
 - [X] Add healthcheck API
+- [X] Add redis healthcheck
 - [X] Logging of acccess and error log
 - [ ] Provide file uploading functionality
-- [ ] Integrate redis for caching purpose
+- [X] Integrate redis for caching purpose
 - [ ] Dump manifests file for kubernetes deployment
 - [X] Replace property file from ini structure file
 - [ ] Structure code in better manner(Refactoring)
-- [ ] Implement json logging
+- [X] Implement json logging
 - [ ] Add docker compose setup
