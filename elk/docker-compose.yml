@@ -84,6 +84,9 @@ services:
         source: ./ot-go-webapp/filebeat.yml
         target: /etc/filebeat/filebeat.yml
         read_only: true
+      - type: bind
+        source: ./ot-go-webapp/entrypoint.sh
+        target: /app/entrypoint.sh
     ports:
       - "8080:8080"
     environment:
@@ -91,6 +94,8 @@ services:
       DB_PORT: 3306
       DB_USER: root
       DB_PASSWORD: password
+    entrypoint:
+      - ./entrypoint.sh
     networks:
       - elk
     depends_on:
