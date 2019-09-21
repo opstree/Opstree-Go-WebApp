@@ -86,6 +86,16 @@ In addition you will get these beautiful logs visualization
 
 ![](./img/kibana1.png)
 
+To run this setup follow these instructions:-
+
+```shell
+cd elk
+export ELK_VERSION=7.3.1
+docker-compose up -d
+```
+
+That's it this will lead you to this UI
+
 ![](./img/kibana2.png)
 
 ## Building Application
@@ -168,4 +178,4 @@ docker run -itd --name application --link mysql:mysql -e DB_USER=root -e DB_PASS
 - [X] Replace property file from ini structure file
 - [ ] Structure code in better manner(Refactoring)
 - [X] Implement json logging
-- [ ] Add docker compose setup
+- [X] Add docker compose setup
