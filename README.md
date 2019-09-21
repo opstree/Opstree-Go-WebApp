@@ -78,6 +78,16 @@ ot-go-webapp
     └── template.go   ---> This file has the HTML template for Web Interface
 ```
 
+## Monitoring Application
+
+We have integrated ELK(Elasticsearch, Logstash, and Kibana) for application log monitoring example. The main motive for this to encourage people to use JSON logging because field separation is quite easy in JSON. If you hate writing grok patterns this feature could be your lifesaver.
+
+In addition you will get these beautiful logs visualization
+
+![](./img/kibana1.png)
+
+![](./img/kibana2.png)
+
 ## Building Application
 
 #### For non-dockerized environment
