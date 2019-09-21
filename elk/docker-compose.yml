@@ -77,7 +77,13 @@ services:
 
   ot-go-webapp:
     build:
-      context: ot-go-webapp/
+      context: ../../
+      dockerfile: Dockerfile.filebeat
+    volumes:
+      - type: bind
+        source: ./ot-go-webapp/filebeat.yml
+        target: /etc/filebeat/filebeat.yml
+        read_only: true
     ports:
       - "8080:8080"
     environment:
