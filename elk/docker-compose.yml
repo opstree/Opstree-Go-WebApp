@@ -72,8 +72,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: employeedb
-    expose:
-      - 3306
+    ports:
+      - "3306:3306"
     networks:
       - elk
 
