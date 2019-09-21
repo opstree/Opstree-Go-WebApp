@@ -78,6 +78,26 @@ ot-go-webapp
     └── template.go   ---> This file has the HTML template for Web Interface
 ```
 
+## Monitoring Application
+
+We have integrated ELK(Elasticsearch, Logstash, and Kibana) for application log monitoring example. The main motive for this to encourage people to use JSON logging because field separation is quite easy in JSON. If you hate writing grok patterns this feature could be your lifesaver.
+
+In addition you will get these beautiful logs visualization
+
+![](./img/kibana1.png)
+
+To run this setup follow these instructions:-
+
+```shell
+cd elk
+export ELK_VERSION=7.3.1
+docker-compose up -d
+```
+
+That's it this will lead you to this UI
+
+![](./img/kibana2.png)
+
 ## Building Application
 
 #### For non-dockerized environment
@@ -147,7 +167,7 @@ docker run -itd --name application --link mysql:mysql -e DB_USER=root -e DB_PASS
 - [X] Write unit tests
 - [X] Fix code if there is any mess
 - [X] Integrate dependency management
-- [ ] Fill README with more information
+- [X] Fill README with more information
 - [X] Make application more attractive
 - [X] Add healthcheck API
 - [X] Add redis healthcheck
@@ -156,6 +176,7 @@ docker run -itd --name application --link mysql:mysql -e DB_USER=root -e DB_PASS
 - [X] Integrate redis for caching purpose
 - [ ] Dump manifests file for kubernetes deployment
 - [X] Replace property file from ini structure file
-- [ ] Structure code in better manner(Refactoring)
+- [X] Structure code in better manner(Refactoring)
 - [X] Implement json logging
-- [ ] Add docker compose setup
+- [X] Add docker compose setup
+- [X] Add ELK monitoring docker compose stack

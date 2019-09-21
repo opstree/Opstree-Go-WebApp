@@ -1,0 +1,23 @@
+filebeat.inputs:
+
+- type: log
+  enabled: true
+  paths:
+    - /var/log/ot-go-webapp.access.log
+    - /var/log/ot-go-webapp.error.log
+  fields:
+    type: logs
+    server: ot-go-webapp
+    index_name: web
+  fields_under_root: true
+
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+  
+setup.template.settings:
+  index.number_of_shards: 1
+
+#----------------------------- Logstash output --------------------------------
+output.logstash:
+  hosts: ["logstash:5044"]
