@@ -74,11 +74,11 @@ services:
       MYSQL_DATABASE: employeedb
     expose:
       - 3306
+    networks:
+      - elk
 
   ot-go-webapp:
-    build:
-      context: ../../
-      dockerfile: Dockerfile.filebeat
+    image: opstreedevops/ot-go-webapp:filebeat
     volumes:
       - type: bind
         source: ./ot-go-webapp/filebeat.yml
