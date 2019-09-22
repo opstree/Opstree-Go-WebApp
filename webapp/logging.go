@@ -27,12 +27,12 @@ func generateLogsFile() {
     if err != nil {
         fmt.Println(err)
     }
-    defer errorfile.Close()
+    defer databasefile.Close()
     infofile, err := os.OpenFile(infofile, os.O_CREATE|os.O_APPEND, 0644)
     if err != nil {
         fmt.Println(err)
     }
-    defer errorfile.Close()
+    defer infofile.Close()
 }
 
 func logStdout() {
