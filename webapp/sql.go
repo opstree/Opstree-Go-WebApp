@@ -40,7 +40,7 @@ func dbConn() (db *sql.DB) {
         dbPass = vaules.Section("database").Key("DB_PASSWORD").String()
         dbUrl  = vaules.Section("database").Key("DB_URL").String()
         dbPort = vaules.Section("database").Key("DB_PORT").String()
-        logFile("access")
+        logFile("info")
           log.WithFields(log.Fields{
             "file": propertyfile,
           }).Info("Reading properties from " + propertyfile)
@@ -49,7 +49,7 @@ func dbConn() (db *sql.DB) {
         dbPass = os.Getenv("DB_PASSWORD")
         dbUrl  = os.Getenv("DB_URL")
         dbPort = os.Getenv("DB_PORT")
-        logFile("access")
+        logFile("info")
         log.WithFields(log.Fields{
             "file": propertyfile,
           }).Info("No property file found, using environment variables")
@@ -95,7 +95,7 @@ func createDatabase() {
         log.WithFields(log.Fields{
             "database": "employeedb",
           }).Info("employeedb database is created")
-        logFile("access")
+        logFile("database")
         log.WithFields(log.Fields{
             "database": "employeedb",
           }).Info("employeedb database is created")
@@ -121,7 +121,7 @@ func createTable() {
         log.WithFields(log.Fields{
             "database": "employeedb",
           }).Info("Using employeedb database")
-        logFile("access")
+        logFile("database")
         log.WithFields(log.Fields{
             "database": "employeedb",
           }).Info("Using employeedb database")
@@ -142,7 +142,7 @@ func createTable() {
         log.WithFields(log.Fields{
             "table": "Employee",
           }).Info("Employee table is created in employeedb database")
-        logFile("access")
+        logFile("database")
         log.WithFields(log.Fields{
             "table": "Employee",
           }).Info("Employee table is created in employeedb database")
@@ -195,10 +195,12 @@ func Index(w http.ResponseWriter, r *http.Request) {
         logStdout()
         log.WithFields(log.Fields{
             "request_type": "GET",
+            "response_code": "200",
           }).Info("Get request on index page")
         logFile("access")
         log.WithFields(log.Fields{
             "request_type": "GET",
+            "response_code": "200",
           }).Info("Get request on index page")
     }
     tmpl.ExecuteTemplate(w, "Index", res)
@@ -246,6 +248,7 @@ func Show(w http.ResponseWriter, r *http.Request) {
         logStdout()
         log.WithFields(log.Fields{
             "request_type": "GET",
+            "response_code": "200",
             "employee_name": name,
             "employee_email": email,
             "employee_date": date,
@@ -254,6 +257,7 @@ func Show(w http.ResponseWriter, r *http.Request) {
         logFile("access")
         log.WithFields(log.Fields{
             "request_type": "GET",
+            "response_code": "200",
             "employee_name": name,
             "employee_email": email,
             "employee_date": date,
@@ -309,6 +313,7 @@ func Edit(w http.ResponseWriter, r *http.Request) {
         logStdout()
         log.WithFields(log.Fields{
             "request_type": "POST",
+            "response_code": "200",
             "employee_name": name,
             "employee_email": email,
             "employee_date": date,
@@ -317,6 +322,7 @@ func Edit(w http.ResponseWriter, r *http.Request) {
         logFile("access")
         log.WithFields(log.Fields{
             "request_type": "POST",
+            "response_code": "200",
             "employee_name": name,
             "employee_email": email,
             "employee_date": date,
@@ -349,6 +355,7 @@ func Insert(w http.ResponseWriter, r *http.Request) {
         logStdout()
         log.WithFields(log.Fields{
             "request_type": "POST",
+            "response_code": "200",
             "employee_name": name,
             "employee_email": email,
             "employee_date": date,
@@ -357,6 +364,7 @@ func Insert(w http.ResponseWriter, r *http.Request) {
         logFile("access")
         log.WithFields(log.Fields{
             "request_type": "POST",
+            "response_code": "200",
             "employee_name": name,
             "employee_email": email,
             "employee_date": date,
@@ -390,6 +398,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
         logStdout()
         log.WithFields(log.Fields{
             "request_type": "POST",
+            "response_code": "200",
             "employee_name": name,
             "employee_email": email,
             "employee_date": date,
@@ -398,6 +407,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
         logFile("access")
         log.WithFields(log.Fields{
             "request_type": "POST",
+            "response_code": "200",
             "employee_name": name,
             "employee_email": email,
             "employee_date": date,
@@ -428,11 +438,13 @@ func Delete(w http.ResponseWriter, r *http.Request) {
     logStdout()
     log.WithFields(log.Fields{
         "request_type": "POST",
+        "response_code": "200",
         "id": emp,
       }).Info("Post request on delete page for " + emp)
     logFile("access")
     log.WithFields(log.Fields{
         "request_type": "POST",
+        "response_code": "200",
         "id": emp,
       }).Info("Post request on delete page for " + emp)
     defer db.Close()

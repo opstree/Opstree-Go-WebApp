@@ -9,6 +9,8 @@ import (
 
 var accesslogfile = "/var/log/ot-go-webapp.access.log"
 var errorlogfile = "/var/log/ot-go-webapp.error.log"
+var databasefile = "/var/log/ot-go-webapp.database.log"
+var infofile = "/var/log/ot-go-webapp.info.log"
 
 func generateLogsFile() {
     accessfile, err := os.OpenFile(accesslogfile, os.O_CREATE|os.O_APPEND, 0644)
@@ -17,6 +19,16 @@ func generateLogsFile() {
     }
     defer accessfile.Close()
     errorfile, err := os.OpenFile(errorlogfile, os.O_CREATE|os.O_APPEND, 0644)
+    if err != nil {
+        fmt.Println(err)
+    }
+    defer errorfile.Close()
+    databasefile, err := os.OpenFile(databasefile, os.O_CREATE|os.O_APPEND, 0644)
+    if err != nil {
+        fmt.Println(err)
+    }
+    defer errorfile.Close()
+    infofile, err := os.OpenFile(infofile, os.O_CREATE|os.O_APPEND, 0644)
     if err != nil {
         fmt.Println(err)
     }
@@ -41,11 +53,23 @@ func logFile(logtype string) {
             fmt.Println(err)
         }
         log.SetOutput(accessfile)
-    } else {
+    } else if logtype == "error" {
         errorfile, err := os.OpenFile(errorlogfile, os.O_APPEND|os.O_WRONLY, 0644)
         if err != nil {
             fmt.Println(err)
         }
         log.SetOutput(errorfile)
+    } else if logtype == "database" {
+        databasefile, err := os.OpenFile(errorlogfile, os.O_APPEND|os.O_WRONLY, 0644)
+        if err != nil {
+            fmt.Println(err)
+        }
+        log.SetOutput(databasefile)
+    } else {
+        infofile, err := os.OpenFile(infofile, os.O_APPEND|os.O_WRONLY, 0644)
+        if err != nil {
+            fmt.Println(err)
+        }
+        log.SetOutput(infofile)
     }
 }

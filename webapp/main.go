@@ -24,10 +24,10 @@ func Run() {
         log.WithFields(log.Fields{
             "file": propertyfile,
           }).Info("Reading properties from " + propertyfile)
-        logFile("access")
-          log.WithFields(log.Fields{
-            "file": propertyfile,
-          }).Info("Reading properties from " + propertyfile)
+        logFile("info")
+        log.WithFields(log.Fields{
+          "file": propertyfile,
+        }).Info("Reading properties from " + propertyfile)
     } else {
         redisHost = os.Getenv("REDIS_HOST")
         redisPort = os.Getenv("REDIS_PORT")
@@ -35,7 +35,7 @@ func Run() {
         log.WithFields(log.Fields{
             "file": propertyfile,
           }).Info("No property file found, using environment variables")
-        logFile("access")
+        logFile("info")
         log.WithFields(log.Fields{
             "file": propertyfile,
           }).Info("No property file found, using environment variables")

@@ -31,7 +31,7 @@ func initializeCache() *redis.Pool {
         log.WithFields(log.Fields{
             "file": propertyfile,
           }).Info("Reading properties from " + propertyfile)
-        logFile("access")
+        logFile("info")
           log.WithFields(log.Fields{
             "file": propertyfile,
           }).Info("Reading properties from " + propertyfile)
@@ -42,7 +42,7 @@ func initializeCache() *redis.Pool {
         log.WithFields(log.Fields{
             "file": propertyfile,
           }).Info("No property file found, using environment variables")
-        logFile("access")
+        logFile("info")
         log.WithFields(log.Fields{
             "file": propertyfile,
           }).Info("No property file found, using environment variables")
