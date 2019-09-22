@@ -4,11 +4,30 @@ filebeat.inputs:
   enabled: true
   paths:
     - /var/log/ot-go-webapp.access.log
-    - /var/log/ot-go-webapp.error.log
   fields:
     type: logs
     server: ot-go-webapp
-    index_name: web
+    index_name: ot-go-webapp-access
+  fields_under_root: true
+
+- type: log
+  enabled: true
+  paths:
+    - /var/log/ot-go-webapp.info.log
+  fields:
+    type: logs
+    server: ot-go-webapp
+    index_name: ot-go-webapp-info
+  fields_under_root: true
+
+- type: log
+  enabled: true
+  paths:
+    - /var/log/ot-go-webapp.database.log
+  fields:
+    type: logs
+    server: ot-go-webapp
+    index_name: ot-go-webapp-database
   fields_under_root: true
 
 filebeat.config.modules:
