@@ -24,6 +24,23 @@ services:
     networks:
       - elk
 
+  apm-server:
+    build:
+      context: apm-server/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - type: bind
+        source: ./apm-server/apm-server.yml
+        target: /usr/share/apm-server/apm-server.yml
+        read_only: true
+    ports:
+      - "8200:8200"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
   logstash:
     build:
       context: logstash/
@@ -94,6 +111,9 @@ services:
       DB_PORT: 3306
       DB_USER: root
       DB_PASSWORD: password
+      ELASTIC_APM_SERVICE_NAME: ot-go-webapp
+      ELASTIC_APM_SERVER_URL: http://apm-server:8200
+      
     entrypoint:
       - ./entrypoint.sh
     networks:

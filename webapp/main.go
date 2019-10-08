@@ -8,6 +8,7 @@ import (
     "github.com/dimiro1/health"
     "github.com/dimiro1/health/redis"
     "gopkg.in/ini.v1"
+    "go.elastic.co/apm/module/apmhttp"
 )
 
 func Run() {
@@ -44,6 +45,7 @@ func Run() {
     generateLogsFile()
     createDatabaseTable()
     db := dbConn()
+    mux := http.NewServeMux()
     mysql := dbcheck.NewMySQLChecker(db)
     handler := health.NewHandler()
     handler.AddChecker("MySQL", mysql)
@@ -56,5 +58,5 @@ func Run() {
     http.HandleFunc("/insert", Insert)
     http.HandleFunc("/update", Update)
     http.HandleFunc("/delete", Delete)
-    http.ListenAndServe(":8080", nil)
+    http.ListenAndServe(":8080", apmhttp.Wrap(mux))
 }
