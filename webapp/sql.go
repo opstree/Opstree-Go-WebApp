@@ -5,13 +5,12 @@ import (
     log "github.com/sirupsen/logrus"
     "fmt"
     "go.elastic.co/apm/module/apmsql"
-    "go.elastic.co/apm/module/apmsql/mysql"
+    _ "go.elastic.co/apm/module/apmsql/mysql"
     "gopkg.in/ini.v1"
     "os"
     "net/http"
     "text/template"
     "github.com/gorilla/mux"
-    _ "github.com/go-sql-driver/mysql"
 )
 
 type Employee struct {
