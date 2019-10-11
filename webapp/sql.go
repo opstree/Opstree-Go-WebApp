@@ -22,6 +22,7 @@ type Employee struct {
 }
 
 var tmpl = template.Must(template.New("Employee Management Template").Parse(htmltemplate))
+var db *sql.DB
 
 func dbConn() (db *sql.DB) {
     dbDriver := "mysql"
@@ -56,7 +57,7 @@ func dbConn() (db *sql.DB) {
           }).Info("No property file found, using environment variables")
     }
 
-    db, err := apmsql.Open(dbDriver, dbUser+":"+dbPass+"@tcp("+dbUrl+":"+dbPort+")/"+dbName)
+    db, err = apmsql.Open(dbDriver, dbUser+":"+dbPass+"@tcp("+dbUrl+":"+dbPort+")/"+dbName)
 
     if err != nil {
         logStdout()
