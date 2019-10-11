@@ -25,6 +25,7 @@ var tmpl = template.Must(template.New("Employee Management Template").Parse(html
 var db *sql.DB
 
 func dbConn() (db *sql.DB) {
+    var err error
     dbDriver := "mysql"
     dbName := "employeedb"
     var dbUser string
