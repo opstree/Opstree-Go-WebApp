@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gitlab.com/opstree/ot-go-webapp/webapp"
+	"github.com/opstree/Opstree-Go-WebApp/webapp"
 )
 
 func main() {
