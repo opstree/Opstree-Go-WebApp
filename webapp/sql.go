@@ -3,7 +3,7 @@ package webapp
 import (
     "database/sql"
     log "github.com/sirupsen/logrus"
-    // "fmt"
+    "fmt"
     // "io"
     "gopkg.in/ini.v1"
     "os"
