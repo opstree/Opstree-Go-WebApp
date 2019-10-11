@@ -9,6 +9,7 @@ import (
     "os"
     "net/http"
     "text/template"
+    "github.com/gorilla/mux"
     _ "github.com/go-sql-driver/mysql"
 )
 
@@ -203,6 +204,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
             "response_code": "200",
           }).Info("Get request on index page")
     }
+    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
     tmpl.ExecuteTemplate(w, "Index", res)
     defer db.Close()
 }
@@ -264,6 +266,7 @@ func Show(w http.ResponseWriter, r *http.Request) {
             "employee_city": city,
           }).Info("Get request on show page for " + name)
     }
+    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
     tmpl.ExecuteTemplate(w, "Show", emp)
     defer db.Close()
 }
@@ -329,6 +332,7 @@ func Edit(w http.ResponseWriter, r *http.Request) {
             "employee_city": city,
           }).Info("Post request on edit page for " + name)
     }
+    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
     tmpl.ExecuteTemplate(w, "Edit", emp)
     defer db.Close()
 }
@@ -371,6 +375,7 @@ func Insert(w http.ResponseWriter, r *http.Request) {
             "employee_city": city,
           }).Info("Post request on insert page for " + name)
     }
+    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
     defer db.Close()
     http.Redirect(w, r, "/", 301)
 }
@@ -414,6 +419,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
             "employee_city": city,
           }).Info("Post request on update page for " + name)
     }
+    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
     defer db.Close()
     http.Redirect(w, r, "/", 301)
 }
@@ -447,6 +453,7 @@ func Delete(w http.ResponseWriter, r *http.Request) {
         "response_code": "200",
         "id": emp,
       }).Info("Post request on delete page for " + emp)
+    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
     defer db.Close()
     http.Redirect(w, r, "/", 301)
 }
