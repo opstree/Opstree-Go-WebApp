@@ -51,7 +51,7 @@ func Run() {
     handler := health.NewHandler()
     handler.AddChecker("MySQL", mysql)
     handler.AddChecker("Redis", redis.NewChecker("tcp", redisHost + ":" + redisPort))
-    r.HandleFunc("/health", handler)
+    http.Handle("/health", handler)
     r.HandleFunc("/", Index)
     r.HandleFunc("/show", Show)
     r.HandleFunc("/new", New)
@@ -68,5 +68,8 @@ func Run() {
     // http.HandleFunc("/insert", Insert)
     // http.HandleFunc("/update", Update)
     // http.HandleFunc("/delete", Delete)
-    http.ListenAndServe(":8080", r)
+    go func() {
+			http.ListenAndServe(":8080", r)
+    }()
+    http.ListenAndServe(":8081", nil)
 }
