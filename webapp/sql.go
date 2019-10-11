@@ -204,9 +204,9 @@ func Index(w http.ResponseWriter, r *http.Request) {
             "response_code": "200",
           }).Info("Get request on index page")
     }
-    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
     tmpl.ExecuteTemplate(w, "Index", res)
     defer db.Close()
+    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
 }
 
 func Show(w http.ResponseWriter, r *http.Request) {
@@ -266,9 +266,9 @@ func Show(w http.ResponseWriter, r *http.Request) {
             "employee_city": city,
           }).Info("Get request on show page for " + name)
     }
-    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
     tmpl.ExecuteTemplate(w, "Show", emp)
     defer db.Close()
+    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
 }
 
 func New(w http.ResponseWriter, r *http.Request) {
@@ -332,9 +332,9 @@ func Edit(w http.ResponseWriter, r *http.Request) {
             "employee_city": city,
           }).Info("Post request on edit page for " + name)
     }
-    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
     tmpl.ExecuteTemplate(w, "Edit", emp)
     defer db.Close()
+    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
 }
 
 func Insert(w http.ResponseWriter, r *http.Request) {
@@ -375,9 +375,9 @@ func Insert(w http.ResponseWriter, r *http.Request) {
             "employee_city": city,
           }).Info("Post request on insert page for " + name)
     }
-    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
     defer db.Close()
     http.Redirect(w, r, "/", 301)
+    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
 }
 
 func Update(w http.ResponseWriter, r *http.Request) {
@@ -419,9 +419,9 @@ func Update(w http.ResponseWriter, r *http.Request) {
             "employee_city": city,
           }).Info("Post request on update page for " + name)
     }
-    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
     defer db.Close()
     http.Redirect(w, r, "/", 301)
+    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
 }
 
 func Delete(w http.ResponseWriter, r *http.Request) {
@@ -453,7 +453,7 @@ func Delete(w http.ResponseWriter, r *http.Request) {
         "response_code": "200",
         "id": emp,
       }).Info("Post request on delete page for " + emp)
-    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
     defer db.Close()
     http.Redirect(w, r, "/", 301)
+    fmt.Fprintf(w, "Hello, %s!\n", mux.Vars(r))
 }
