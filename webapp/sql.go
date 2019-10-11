@@ -4,7 +4,8 @@ import (
     "database/sql"
     log "github.com/sirupsen/logrus"
     "fmt"
-    // "io"
+    "go.elastic.co/apm/module/apmsql"
+    "go.elastic.co/apm/module/apmsql/mysql"
     "gopkg.in/ini.v1"
     "os"
     "net/http"
@@ -56,7 +57,7 @@ func dbConn() (db *sql.DB) {
           }).Info("No property file found, using environment variables")
     }
 
-    db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp("+dbUrl+":"+dbPort+")/"+dbName)
+    db, err := apmsql.Open(dbDriver, dbUser+":"+dbPass+"@tcp("+dbUrl+":"+dbPort+")/"+dbName)
 
     if err != nil {
         logStdout()
