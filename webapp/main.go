@@ -8,7 +8,8 @@ import (
     "github.com/dimiro1/health"
     "github.com/dimiro1/health/redis"
     "gopkg.in/ini.v1"
-    "go.elastic.co/apm/module/apmhttp"
+    "github.com/gorilla/mux"
+    "go.elastic.co/apm/module/apmgorilla"
 )
 
 func Run() {
@@ -45,19 +46,27 @@ func Run() {
     generateLogsFile()
     createDatabaseTable()
     db := dbConn()
-    mux := http.NewServeMux()
     mysql := dbcheck.NewMySQLChecker(db)
+    r := mux.NewRouter()
     handler := health.NewHandler()
     handler.AddChecker("MySQL", mysql)
     handler.AddChecker("Redis", redis.NewChecker("tcp", redisHost + ":" + redisPort))
-    http.Handle("/health", handler)
-    mux.HandleFunc("/", Index)
-    http.HandleFunc("/show", Show)
-    http.HandleFunc("/new", New)
-    http.HandleFunc("/edit", Edit)
-    http.HandleFunc("/insert", Insert)
-    http.HandleFunc("/update", Update)
-    http.HandleFunc("/delete", Delete)
-    handler := apmhttp.Wrap(mux)
-    http.ListenAndServe(":8080", handler)
+    r.HandleFunc("/health", handler)
+    r.HandleFunc("/", Index)
+    r.HandleFunc("/show", Show)
+    r.HandleFunc("/new", New)
+    r.HandleFunc("/edit", Edit)
+    r.HandleFunc("/insert", Insert)
+    r.HandleFunc("/update", Update)
+    r.HandleFunc("/delete", Delete)
+    r.Use(apmgorilla.Middleware())
+    // http.Handle("/health", handler)
+    // http.HandleFunc("/", Index)
+    // http.HandleFunc("/show", Show)
+    // http.HandleFunc("/new", New)
+    // http.HandleFunc("/edit", Edit)
+    // http.HandleFunc("/insert", Insert)
+    // http.HandleFunc("/update", Update)
+    // http.HandleFunc("/delete", Delete)
+    http.ListenAndServe(":8080", r)
 }
