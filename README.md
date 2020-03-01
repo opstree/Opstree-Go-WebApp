@@ -180,3 +180,5 @@ docker run -itd --name application --link mysql:mysql -e DB_USER=root -e DB_PASS
 - [X] Implement json logging
 - [X] Add docker compose setup
 - [X] Add ELK monitoring docker compose stack
+
+Doing changes for testing
