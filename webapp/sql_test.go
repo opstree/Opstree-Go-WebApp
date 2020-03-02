@@ -9,49 +9,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func Test_generateLogging(t *testing.T) {
-	tests := []struct {
-		name string
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			generateLogging()
-		})
-	}
-}
-
-func Test_loggingInit(t *testing.T) {
-	tests := []struct {
-		name string
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			loggingInit()
-		})
-	}
-}
-
-func Test_loggingLogFileInit(t *testing.T) {
-	type args struct {
-		logtype string
-	}
-	tests := []struct {
-		name string
-		args args
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			loggingLogFileInit(tt.args.logtype)
-		})
-	}
-}
-
 func Test_dbConn(t *testing.T) {
 	tests := []struct {
 		name   string
