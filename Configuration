@@ -26,4 +26,4 @@ image_version              = 1.0
 image_description          = Opstree Golang Web Application
 image_registry_url         = opstreedevops
 image_registry_secret_name = dockersecret
-image_registry_user        = docker
+image_registry_user        = abhishekdubey510
