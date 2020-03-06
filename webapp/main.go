@@ -4,6 +4,7 @@ import (
     "net/http"
     log "github.com/sirupsen/logrus"
     "os"
+    "time"
     dbcheck "github.com/dimiro1/health/db"
     "github.com/dimiro1/health"
     "github.com/dimiro1/health/redis"
@@ -42,6 +43,7 @@ func Run() {
     }
 
     generateLogsFile()
+    time.Sleep(60 * time.Second)
     createDatabaseTable()
     db := dbConn()
     mysql := dbcheck.NewMySQLChecker(db)
