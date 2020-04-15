@@ -8,6 +8,7 @@ node("master") {
     codeBuild(
         imageName: "${config.image_name}",
         imageVersion: "${config.image_version}",
+        imageRegistry: "${config.image_registry}",
         dockerFile: "${config.dockerfile_path}"
     )
     
@@ -62,6 +63,7 @@ node("master") {
     }
     scanDockerImage(
         imageName: "${config.image_name}",
+        imageRegistry: "${config.image_registry}",
         imageVersion: "${config.image_version}"
     )
     publishImage(
@@ -79,7 +81,7 @@ def codeBuild(Map stepParams) {
         stage("Building image for code") {
             def imageName = "${stepParams.imageName}-${env.BRANCH_NAME}".replace(" ", "")
             def imageTag = "${stepParams.imageVersion}-${env.BUILD_ID}".replace(" ", "")
-            sh "docker build -t ${imageName}:${imageTag} -f ${stepParams.dockerFile} ."
+            sh "docker build -t ${stepParams.imageRegistry}/${imageName}:${imageTag} -f ${stepParams.dockerFile} ."
         }
     } catch (Exception e) {
         echo "There is an error while building image. Please check the logs!!!!"
@@ -210,7 +212,7 @@ def scanDockerImage(Map stepParams) {
         stage("Scanning Docker Image") {
             def imageName = "${stepParams.imageName}-${env.BRANCH_NAME}".replace(" ", "")
             def imageTag = "${stepParams.imageVersion}-${env.BUILD_ID}".replace(" ", "")
-            aquaMicroscanner imageName: "${image_registry}/${imageName}:${imageTag}",
+            aquaMicroscanner imageName: "${stepParams.imageRegistry}/${imageName}:${imageTag}",
             notCompliesCmd: '',
             onDisallowed: 'ignore',
             outputFormat: 'html'

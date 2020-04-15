@@ -7,3 +7,4 @@ image_registry             = opstreedevops
 image_secret               = dockersecret
 image_user                 = abhishekdubey510
 image_registry_url         = hub.docker.com
+dockerfile_path            = Dockerfile
