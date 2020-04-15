@@ -20,7 +20,7 @@ node("master") {
 
     def codechecks = ["code_unit_testing", "code_coverage", "generate_test_reports"]
 
-    withDockerContainer(args: "-v ${WORKSPACE}:${config.project_dir} -u 0 -e GOPATH=${WORKSPACE}", image: 'opstreedevops/golang-ci:latest') {
+    withDockerContainer(args: "-v ${WORKSPACE}:${config.project_dir} -u 0 -w ${config.project_dir}", image: 'opstreedevops/golang-ci:latest') {
         sh "dep ensure"
         check_lists.each {
             check = it
