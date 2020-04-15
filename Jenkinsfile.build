@@ -1,8 +1,5 @@
 node("master") {
 
-    script {
-        System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
-    }
     stage("Checking out codebase") {
         checkout scm
         config = readProperties file: 'Configuration'
