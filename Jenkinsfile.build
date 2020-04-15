@@ -21,6 +21,7 @@ node("master") {
     def codechecks = ["code_unit_testing", "code_coverage", "generate_test_reports"]
 
     withDockerContainer(args: "-v ${WORKSPACE}:${config.project_dir}", image: 'opstreedevops/golang-ci:latest') {
+        sh "go get -v ./..."
         check_lists.each {
             check = it
             jobs[check] = {
@@ -189,7 +190,7 @@ def generateAggregatedResults(Map stepParams) {
     try {
         stage("Generating aggregated results") {
             sh "rm -rf ${stepParams.applicationName}-*.html"
-            sh "goreporter -p . -f html && cp ${stepParams.applicationName}-*.html aggregated-report.html"
+            sh "goreporter -p . -f html && cp GoWebAppCI_master-*.html aggregated-report.html"
             publishHTML([
                 allowMissing: false, 
                 alwaysLinkToLastBuild: false, 
