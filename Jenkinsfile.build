@@ -1,0 +1,246 @@
+node("master") {
+
+    script {
+        System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
+    }
+    stage("Checking out codebase") {
+        checkout scm
+        config = readProperties file: 'Configuration'
+    }
+
+    codeBuild(
+        imageName: "${config.image_name}",
+        imageVersion: "${config.image_version}",
+        dockerFile: "${config.dockerfile_path}"
+    )
+    
+    def jobs = [:]
+    
+    def check_lists = ["code_quality", "code_bugscan", "code_duplicacy_check"]
+
+    def codetests = [:]
+
+    def codechecks = ["code_unit_testing", "code_coverage", "generate_test_reports"]
+
+    withDockerContainer(args: "-v ${WORKSPACE}:${config.project_dir}", image: 'opstreedevops/golang-ci:latest') {
+        check_lists.each {
+            check = it
+            jobs[check] = {
+                if ("${it}" == "code_quality") {
+                    checkCodeQuality()
+                }
+                if ("${it}" == "code_bugscan") {
+                    checkBugs()
+                }
+                if ("${it}" == "code_duplicacy_check") {
+                    checkDuplicacy()
+                }
+            }
+        }
+
+        codechecks.each {
+            codetest = it
+            codetests[codetest] = {
+                if ("${it}" == "code_unit_testing") {
+                    unitTest()
+                }
+                if ("${it}" == "code_coverage") {
+                    checkCodeCoverage()
+                }
+                if ("${it}" == "generate_test_reports") {
+                    generateAggregatedResults(
+                        applicationName: "${config.application_name}"
+                    )
+                }
+            }
+        }
+
+        stage("Static Code Analysis") {
+            parallel jobs
+        }
+
+        stage("Code Testing") {
+            parallel codetests
+        }
+    }
+    scanDockerImage(
+        imageName: "${config.image_name}",
+        imageVersion: "${config.image_version}"
+    )
+    publishImage(
+        imageName: "${config.image_name}",
+        imageVersion: "${config.image_version}",
+        imageRegistry: "${config.image_registry}",
+        imageSecret: "${config.image_secret}",
+        imageUser: "${config.image_user}",
+        imageRegistryURL: "${config.image_registry_url}"
+    )
+}
+
+def codeBuild(Map stepParams) {
+    try {
+        stage("Building image for code") {
+            def imageName = "${stepParams.imageName}-${env.BRANCH_NAME}".replace(" ", "")
+            def imageTag = "${stepParams.imageVersion}-${env.BUILD_ID}".replace(" ", "")
+            sh "docker build -t ${imageName}:${imageTag} -f ${stepParams.dockerFile} ."
+        }
+    } catch (Exception e) {
+        echo "There is an error while building image. Please check the logs!!!!"
+        echo e.toString()
+        throw e
+    }
+}
+
+def checkCodeQuality() {
+    try {
+        stage("Analyzing code quality") {
+            sh "gocheckstyle -reporter xml 2>checkstyle-result.xml || true"
+            def checkstyle = scanForIssues tool: [$class: 'CheckStyle'], pattern: "checkstyle-result.xml"
+            publishIssues issues:[checkstyle]
+        }
+    } catch (Exception e) {
+        echo "There is an error while checking code quality. Please check the logs!!!!"
+        echo e.toString()
+        throw e
+    }
+}
+
+def checkBugs() {
+    try {
+        stage("Analyzing code bugs") {
+            sh "gosec -fmt=html -out=findbugs.html ./... || true"
+            publishHTML([
+                allowMissing: false, 
+                alwaysLinkToLastBuild: false, 
+                keepAll: true, 
+                reportDir: "", 
+                reportFiles: 'findbugs.html', 
+                reportName: "Bug Scanning Report", 
+                reportTitles: ''
+            ])
+        }
+    } catch (Exception e) {
+        echo "There is an error while scanning bugs. Please check the logs!!!!"
+        echo e.toString()
+        throw e
+    }
+}
+
+def checkDuplicacy() {
+    try {
+        stage("Analyzing code duplicacy") {
+            sh "dupl -t 200 -html > duplicacy-result.html"
+            publishHTML([
+                allowMissing: false, 
+                alwaysLinkToLastBuild: false, 
+                keepAll: true, 
+                reportDir: "", 
+                reportFiles: 'duplicacy-result.html', 
+                reportName: "Code Duplicacy Report", 
+                reportTitles: ''
+            ])
+        }
+    } catch (Exception e) {
+        echo "There is an error while checking code duplicacy. Please check the logs!!!!"
+        echo e.toString()
+        throw e
+    }
+}
+
+def unitTest() {
+    try {
+        stage("Executing unit test cases") {
+            sh "go test -v ./... | go2xunit -output junit-report.xml"
+            junit allowEmptyResults: true, testResults: "junit-report.xml"
+        }
+    } catch (Exception e) {
+        echo "There is an error while executing unit test cases. Please check the logs!!!!"
+        echo e.toString()
+        throw e
+    }
+}
+
+def checkCodeCoverage() {
+    try {
+        stage("Executing code coverage tests") {
+            sh "go test ./... -v -coverprofile=tmp.out"
+            sh "gocov convert tmp.out | gocov-xml > cobertura-coverage.xml"
+            cobertura autoUpdateHealth: false, 
+            autoUpdateStability: false, 
+            coberturaReportFile: "cobertura-coverage.xml", 
+            conditionalCoverageTargets: "80, 0, 0", 
+            failNoReports: false, 
+            failUnhealthy: true, 
+            failUnstable: false, 
+            lineCoverageTargets: "80, 0, 0", 
+            maxNumberOfBuilds: 0, 
+            methodCoverageTargets: "80, 0, 0", 
+            onlyStable: false, 
+            sourceEncoding: 'ASCII', 
+            zoomCoverageChart: false
+        }
+    } catch (Exception e) {
+        echo "There is an error while checking code coverage. Please check the logs!!!!"
+        echo e.toString()
+        throw e
+    }
+}
+
+def generateAggregatedResults(Map stepParams) {
+    try {
+        stage("Generating aggregated results") {
+            sh "rm -rf ${stepParams.applicationName}-*.html"
+            sh "goreporter -p . -f html && cp ${stepParams.applicationName}-*.html aggregated-report.html"
+            publishHTML([
+                allowMissing: false, 
+                alwaysLinkToLastBuild: false, 
+                keepAll: true, 
+                reportDir: "", 
+                reportFiles: 'aggregated-report.html', 
+                reportName: "CI Aggregated Report", 
+                reportTitles: ''
+            ])
+        }
+    } catch (Exception e) {
+        echo "There is an error while checking code analysis. Please check the logs!!!!"
+        echo e.toString()
+        throw e
+    }
+}
+
+def scanDockerImage(Map stepParams) {
+    try {
+        stage("Scanning Docker Image") {
+            def imageName = "${stepParams.imageName}-${env.BRANCH_NAME}".replace(" ", "")
+            def imageTag = "${stepParams.imageVersion}-${env.BUILD_ID}".replace(" ", "")
+            aquaMicroscanner imageName: "${image_registry}/${imageName}:${imageTag}",
+            notCompliesCmd: '',
+            onDisallowed: 'ignore',
+            outputFormat: 'html'
+        }
+    } catch (Exception e) {
+        echo "Unable to scan the image ${image_name}. Please check logs!!!!"
+        echo e.toString()
+        throw e
+    }
+}
+
+def publishImage(Map stepParams) {
+    try {
+        stage("Publishing docker image to registry") {
+            def imageName = "${stepParams.imageName}-${env.BRANCH_NAME}".replace(" ", "")
+            def imageTag = "${stepParams.imageVersion}-${env.BUILD_ID}".replace(" ", "")
+            withCredentials([string(credentialsId: "${stepParams.imageSecret}", variable: 'tokenid')]) {
+                sh "docker login ${stepParams.imageRegistryURL} -u ${stepParams.imageUser} -p ${tokenid}"
+                sh "docker tag ${stepParams.imageRegistry}/${imageName}:${imageTag} ${stepParams.imageRegistry}/${imageName}:latest"
+                sh "docker push ${stepParams.imageRegistry}/${imageName}:${imageTag}"
+                sh "docker push ${stepParams.imageRegistry}/${imageName}:latest"
+                sh "docker rmi -f ${stepParams.imageRegistry}/${imageName}:${imageTag} ${stepParams.imageRegistry}/${imageName}:latest"
+            }   
+        }
+    } catch (Exception e) {
+        echo "Unable to push the image ${imageName}. Please check logs!!!!"
+        echo e.toString()
+        throw e
+    }
+}
