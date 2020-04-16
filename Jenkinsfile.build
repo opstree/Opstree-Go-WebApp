@@ -46,7 +46,9 @@ node("master") {
                     unitTest()
                 }
                 if ("${it}" == "code_coverage") {
-                    checkCodeCoverage()
+                    checkCodeCoverage(
+                        project_dir: "${config.project_dir}"
+                    )
                 }
                 if ("${it}" == "generate_test_reports") {
                     generateAggregatedResults(
@@ -162,11 +164,11 @@ def unitTest() {
     }
 }
 
-def checkCodeCoverage() {
+def checkCodeCoverage(Map stepParams) {
     try {
         stage("Executing code coverage tests") {
-            sh "go test ./... -v -coverprofile=tmp.out"
-            sh "gocov convert tmp.out | gocov-xml > cobertura-coverage.xml"
+            sh "cd ${stepParams.project_dir}; go test ./... -v -coverprofile=tmp.out"
+            sh "cd ${stepParams.project_dir}; gocov convert tmp.out | gocov-xml > cobertura-coverage.xml"
             cobertura autoUpdateHealth: false, 
             autoUpdateStability: false, 
             coberturaReportFile: "cobertura-coverage.xml", 
@@ -191,7 +193,7 @@ def checkCodeCoverage() {
 def generateAggregatedResults(Map stepParams) {
     try {
         stage("Generating aggregated results") {
-            sh "rm -rf ${stepParams.applicationName}-*.html"
+            sh "rm -rf GoWebAppCI_master-*.html"
             sh "goreporter -p . -f html && cp GoWebAppCI_master-*.html aggregated-report.html"
             publishHTML([
                 allowMissing: false, 
