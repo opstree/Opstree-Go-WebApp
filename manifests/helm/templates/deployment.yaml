@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.otGoWebApp.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.otGoWebApp.name }}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.otGoWebApp.name }}
+    spec:
+      containers:
+      - image: {{ .Values.otGoWebApp.imageName }}:{{ .Values.otGoWebApp.imageTag }}
+        name: {{ .Values.otGoWebApp.name }}
+        env:
+        - name: DB_URL
+          value: {{ .Values.mysql.name }}
+        - name: DB_PORT
+          value: {{ .Values.mysql.port }}
+        - name: DB_USER
+          value: "root"
+        - name: DB_PASSWORD
+          value: {{ .Values.mysql.password }}
+        - name: REDIS_HOST
+          value: {{ .Values.redis.name }}
+        - name: REDIS_PORT
+          value: {{ .Values.redis.port }}
+        ports:
+        - containerPort: {{ .Values.otGoWebApp.port }}
+          name: {{ .Values.otGoWebApp.name }}

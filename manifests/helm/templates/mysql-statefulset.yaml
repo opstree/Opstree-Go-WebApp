@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.mysql.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.mysql.name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.mysql.name }}
+    spec:
+      containers:
+      - image: {{ .Values.mysql.imageName }}:{{ .Values.mysql.imageTag }}
+        name: {{ .Values.mysql.name }}
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: {{ .Values.mysql.password }}
+        - name: MYSQL_DATABASE
+          value: {{ .Values.mysql.databaseName }}
+        ports:
+        - containerPort: {{ .Values.mysql.port }}
+          name: {{ .Values.mysql.name }}

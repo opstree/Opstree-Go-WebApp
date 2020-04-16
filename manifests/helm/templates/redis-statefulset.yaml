@@ -1,0 +1,22 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.redis.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.redis.name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.redis.name }}
+    spec:
+      containers:
+      - image: {{ .Values.redis.imageName }}:{{ .Values.redis.imageTag }}
+        name: {{ .Values.redis.name }}
+        ports:
+        - containerPort: {{ .Values.redis.port }}
+          name: {{ .Values.redis.name }}

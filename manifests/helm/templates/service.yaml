@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.otGoWebApp.name }}
+  labels:
+    app: {{ .Values.otGoWebApp.name }}
+spec:
+  ports:
+  - name: {{ .Values.otGoWebApp.name }}
+    port: {{ .Values.otGoWebApp.port }}
+  selector:
+    app: {{ .Values.otGoWebApp.name }}

@@ -1,0 +1,19 @@
+otGoWebApp:
+  name: ot-go-webapp
+  port: 8080
+  imageName: opstreedevops/ot-go-webapp-master
+  imageTag: "1.0-15"
+
+mysql:
+  name: "mysql"
+  port: 3306
+  password: "Opstree"
+  imageName: mysql
+  imageTag: "5.6"
+  databaseName: employeedb
+
+redis:
+  name: "redis"
+  port: 6379
+  imageName: redis
+  imageTag: latest
