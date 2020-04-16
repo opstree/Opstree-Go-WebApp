@@ -8,3 +8,4 @@ image_secret               = dockersecret
 image_user                 = abhishekdubey510
 image_registry_url         = 
 dockerfile_path            = Dockerfile
+helm_chart_dir             = manifests/helm
