@@ -22,9 +22,7 @@ node("master") {
 
     withDockerContainer(args: "-v ${WORKSPACE}:${config.project_dir} -u 0", image: 'opstreedevops/golang-ci:latest') {
         stage("Getting application dependency") {
-            dir("${config.project_dir}") {
-                sh "go get -v ./..."
-            }
+            sh "cd ${config.project_dir}; go get -v ./..."
         }
         check_lists.each {
             check = it
