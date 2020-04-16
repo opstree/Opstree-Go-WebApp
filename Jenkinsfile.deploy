@@ -25,7 +25,7 @@ def lintHelmChart(Map stepParams) {
     try {
         stage("Linting helm chart for application") {
             dir("${stepParams.helmChartDir}") {
-                echo "helm lint ./"
+                sh "helm lint ./"
             }
         }
     } catch (Exception e) {
@@ -39,7 +39,7 @@ def applyHelmChart(Map stepParams) {
     try {
         stage("Setting up the GoWebApp application") {
             dir("${stepParams.helmChartDir}") {
-                echo "helm upgrade ${stepParams.applicationName} ./ -f values.yaml --namespace go-webapp --install"
+                sh "helm upgrade ${stepParams.applicationName} ./ -f values.yaml --namespace go-webapp --install"
             }
         }
     } catch (Exception e) {
@@ -53,7 +53,7 @@ def testHelmChart(Map stepParams) {
     try {
         stage("Testing GoWebApp Application") {
             dir("${stepParams.helmChartDir}") {
-                echo "helm test ${stepParams.applicationName} --namespace go-webapp"
+                sh "helm test ${stepParams.applicationName} --namespace go-webapp"
             }
         }
     } catch (Exception e) {
