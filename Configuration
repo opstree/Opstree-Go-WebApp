@@ -6,5 +6,5 @@ image_description          = Opstree Golang Web Application
 image_registry             = opstreedevops
 image_secret               = dockersecret
 image_user                 = abhishekdubey510
-image_registry_url         = hub.docker.com
+image_registry_url         = 
 dockerfile_path            = Dockerfile

@@ -232,9 +232,9 @@ def scanDockerImage(Map stepParams) {
 def publishImage(Map stepParams) {
     try {
         stage("Publishing docker image to registry") {
-            def imageName = "${stepParams.imageName}-${env.BRANCH_NAME}".replace(" ", "")
-            def imageTag = "${stepParams.imageVersion}-${env.BUILD_ID}".replace(" ", "")
             withCredentials([string(credentialsId: "${stepParams.imageSecret}", variable: 'tokenid')]) {
+                def imageName = "${stepParams.imageName}-${env.BRANCH_NAME}".replace(" ", "")
+                def imageTag = "${stepParams.imageVersion}-${env.BUILD_ID}".replace(" ", "")
                 sh "docker login ${stepParams.imageRegistryURL} -u ${stepParams.imageUser} -p ${tokenid}"
                 sh "docker tag ${stepParams.imageRegistry}/${imageName}:${imageTag} ${stepParams.imageRegistry}/${imageName}:latest"
                 sh "docker push ${stepParams.imageRegistry}/${imageName}:${imageTag}"
