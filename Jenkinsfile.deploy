@@ -37,7 +37,7 @@ def lintHelmChart(Map stepParams) {
 
 def applyHelmChart(Map stepParams) {
     try {
-        stage("Setting up application") {
+        stage("Setting up the GoWebApp application") {
             dir("${stepParams.helmChartDir}") {
                 echo "helm upgrade ${stepParams.applicationName} ./ -f values.yaml --namespace go-webapp --install"
             }
@@ -51,7 +51,7 @@ def applyHelmChart(Map stepParams) {
 
 def testHelmChart(Map stepParams) {
     try {
-        stage("Setting up application") {
+        stage("Testing GoWebApp Application") {
             dir("${stepParams.helmChartDir}") {
                 echo "helm test ${stepParams.applicationName} --namespace go-webapp"
             }
