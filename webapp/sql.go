@@ -213,6 +213,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 func Show(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
+    start := time.Now()
     nId := r.URL.Query().Get("id")
     selDB, err := db.Query("SELECT * FROM Employee WHERE id=?", nId)
     if err != nil {
@@ -282,6 +283,7 @@ func New(w http.ResponseWriter, r *http.Request) {
 
 func Edit(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
+    start := time.Now()
     nId := r.URL.Query().Get("id")
     selDB, err := db.Query("SELECT * FROM Employee WHERE id=?", nId)
     if err != nil {
@@ -347,6 +349,7 @@ func Edit(w http.ResponseWriter, r *http.Request) {
 
 func Insert(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
+    start := time.Now()
     if r.Method == "POST" {
         name := r.FormValue("name")
         city := r.FormValue("city")
@@ -393,6 +396,7 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 
 func Update(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
+    start := time.Now()
     if r.Method == "POST" {
         name := r.FormValue("name")
         city := r.FormValue("city")
@@ -440,6 +444,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 
 func Delete(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
+    start := time.Now()
     emp := r.URL.Query().Get("id")
     delForm, err := db.Prepare("DELETE FROM Employee WHERE id=?")
     if err != nil {
