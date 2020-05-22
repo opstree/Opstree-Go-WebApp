@@ -256,6 +256,9 @@ func Show(w http.ResponseWriter, r *http.Request) {
             "employee_email": email,
             "employee_date": date,
             "employee_city": city,
+            "response_code": 200,
+            "resonse_time": time.Since(start),
+            "request_url": r.URL.Path,
           }).Info("Get request on show page for " + name)
         logFile("access")
         log.WithFields(log.Fields{
@@ -264,6 +267,9 @@ func Show(w http.ResponseWriter, r *http.Request) {
             "employee_email": email,
             "employee_date": date,
             "employee_city": city,
+            "response_code": 200,
+            "resonse_time": time.Since(start),
+            "request_url": r.URL.Path,
           }).Info("Get request on show page for " + name)
     }
     tmpl.ExecuteTemplate(w, "Show", emp)
@@ -319,6 +325,9 @@ func Edit(w http.ResponseWriter, r *http.Request) {
             "employee_email": email,
             "employee_date": date,
             "employee_city": city,
+            "response_code": 200,
+            "resonse_time": time.Since(start),
+            "request_url": r.URL.Path,
           }).Info("Post request on edit page for " + name)
         logFile("access")
         log.WithFields(log.Fields{
@@ -327,6 +336,9 @@ func Edit(w http.ResponseWriter, r *http.Request) {
             "employee_email": email,
             "employee_date": date,
             "employee_city": city,
+            "response_code": 200,
+            "resonse_time": time.Since(start),
+            "request_url": r.URL.Path,
           }).Info("Post request on edit page for " + name)
     }
     tmpl.ExecuteTemplate(w, "Edit", emp)
@@ -359,6 +371,9 @@ func Insert(w http.ResponseWriter, r *http.Request) {
             "employee_email": email,
             "employee_date": date,
             "employee_city": city,
+            "response_code": 200,
+            "resonse_time": time.Since(start),
+            "request_url": r.URL.Path,
           }).Info("Post request on insert page for " + name)
         logFile("access")
         log.WithFields(log.Fields{
@@ -367,6 +382,9 @@ func Insert(w http.ResponseWriter, r *http.Request) {
             "employee_email": email,
             "employee_date": date,
             "employee_city": city,
+            "response_code": 200,
+            "resonse_time": time.Since(start),
+            "request_url": r.URL.Path,
           }).Info("Post request on insert page for " + name)
     }
     defer db.Close()
@@ -400,6 +418,9 @@ func Update(w http.ResponseWriter, r *http.Request) {
             "employee_email": email,
             "employee_date": date,
             "employee_city": city,
+            "response_code": 200,
+            "resonse_time": time.Since(start),
+            "request_url": r.URL.Path,
           }).Info("Post request on update page for " + name)
         logFile("access")
         log.WithFields(log.Fields{
@@ -408,6 +429,9 @@ func Update(w http.ResponseWriter, r *http.Request) {
             "employee_email": email,
             "employee_date": date,
             "employee_city": city,
+            "response_code": 200,
+            "resonse_time": time.Since(start),
+            "request_url": r.URL.Path,
           }).Info("Post request on update page for " + name)
     }
     defer db.Close()
@@ -435,11 +459,17 @@ func Delete(w http.ResponseWriter, r *http.Request) {
     log.WithFields(log.Fields{
         "request_type": "POST",
         "id": emp,
+        "response_code": 200,
+        "resonse_time": time.Since(start),
+        "request_url": r.URL.Path,
       }).Info("Post request on delete page for " + emp)
     logFile("access")
     log.WithFields(log.Fields{
         "request_type": "POST",
         "id": emp,
+        "response_code": 200,
+        "resonse_time": time.Since(start),
+        "request_url": r.URL.Path,
       }).Info("Post request on delete page for " + emp)
     defer db.Close()
     http.Redirect(w, r, "/", 301)
