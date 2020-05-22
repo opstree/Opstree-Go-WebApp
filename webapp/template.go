@@ -1,6 +1,6 @@
 package webapp
 
-const htmltemplate=`{{ define "Index" }}
+const htmltemplate = `{{ define "Index" }}
 {{ template "Header" }}
   {{ template "Menu"  }}
   <h2><strong>Registered Users</strong></h2>

@@ -1,15 +1,15 @@
 package webapp
 
 import (
-    log "github.com/sirupsen/logrus"
-    "fmt"
+	"fmt"
+	log "github.com/sirupsen/logrus"
+	"gopkg.in/ini.v1"
+	"os"
 	"strconv"
 	"time"
-    "gopkg.in/ini.v1"
-	"os"
 	// "json"
-    "net/http"
-	"github.com/gomodule/redigo/redis"	
+	"github.com/gomodule/redigo/redis"
+	"net/http"
 )
 
 var pool *redis.Pool
@@ -20,47 +20,47 @@ var redisPort string
 func initializeCache() *redis.Pool {
 	propertyfile := "/etc/conf.d/ot-go-webapp/application.ini"
 
-    if fileExists(propertyfile) {
-        vaules, err := ini.Load(propertyfile)
-        if err != nil {
-            log.Error("No property file found in " + propertyfile)
-        }
-        redisHost = vaules.Section("redis").Key("REDIS_HOST").String()
-        redisPort = vaules.Section("redis").Key("REDIS_PORT").String()
-        logStdout()
-        log.WithFields(log.Fields{
-            "file": propertyfile,
-          }).Info("Reading properties from " + propertyfile)
-        logFile("access")
-          log.WithFields(log.Fields{
-            "file": propertyfile,
-          }).Info("Reading properties from " + propertyfile)
-    } else {
-        redisHost = os.Getenv("REDIS_HOST")
-        redisPort = os.Getenv("REDIS_PORT")
-        logStdout()
-        log.WithFields(log.Fields{
-            "file": propertyfile,
-          }).Info("No property file found, using environment variables")
-        logFile("access")
-        log.WithFields(log.Fields{
-            "file": propertyfile,
-          }).Info("No property file found, using environment variables")
+	if fileExists(propertyfile) {
+		vaules, err := ini.Load(propertyfile)
+		if err != nil {
+			log.Error("No property file found in " + propertyfile)
+		}
+		redisHost = vaules.Section("redis").Key("REDIS_HOST").String()
+		redisPort = vaules.Section("redis").Key("REDIS_PORT").String()
+		logStdout()
+		log.WithFields(log.Fields{
+			"file": propertyfile,
+		}).Info("Reading properties from " + propertyfile)
+		logFile("access")
+		log.WithFields(log.Fields{
+			"file": propertyfile,
+		}).Info("Reading properties from " + propertyfile)
+	} else {
+		redisHost = os.Getenv("REDIS_HOST")
+		redisPort = os.Getenv("REDIS_PORT")
+		logStdout()
+		log.WithFields(log.Fields{
+			"file": propertyfile,
+		}).Info("No property file found, using environment variables")
+		logFile("access")
+		log.WithFields(log.Fields{
+			"file": propertyfile,
+		}).Info("No property file found, using environment variables")
 	}
 
 	return &redis.Pool{
 		MaxIdle:     10,
 		IdleTimeout: 240 * time.Second,
 		Dial: func() (redis.Conn, error) {
-			return redis.Dial("tcp", redisHost + ":" + redisPort)
+			return redis.Dial("tcp", redisHost+":"+redisPort)
 		},
 	}
 }
 
 func redisIndex(w http.ResponseWriter, r *http.Request) {
 	pool = initializeCache()
-	conn :=  pool.Get()
-    emp := Employee{}
+	conn := pool.Get()
+	emp := Employee{}
 	res := []Employee{}
 	keys_list, err := redis.Strings(conn.Do("KEYS", "*"))
 	if err != nil {
@@ -69,10 +69,10 @@ func redisIndex(w http.ResponseWriter, r *http.Request) {
 
 	for _, key := range keys_list {
 		id := covertString(key)
-        emp.Id = id
-        emp.Name = getRedisKey(key, "name")
-        emp.Email = getRedisKey(key, "email")
-        emp.Date = getRedisKey(key, "date")
+		emp.Id = id
+		emp.Name = getRedisKey(key, "name")
+		emp.Email = getRedisKey(key, "email")
+		emp.Date = getRedisKey(key, "date")
 		emp.City = getRedisKey(key, "city")
 		res = append(res, emp)
 	}
@@ -109,7 +109,7 @@ func redisEditUser(w http.ResponseWriter, r *http.Request) {
 
 func redisInsertUser(w http.ResponseWriter, r *http.Request) {
 	pool = initializeCache()
-	conn :=  pool.Get()
+	conn := pool.Get()
 	if r.Method == "POST" {
 		nId := r.FormValue("id")
 		name := r.FormValue("name")
@@ -128,7 +128,7 @@ func redisInsertUser(w http.ResponseWriter, r *http.Request) {
 
 func redisUpdateUser(w http.ResponseWriter, r *http.Request) {
 	pool = initializeCache()
-	conn :=  pool.Get()
+	conn := pool.Get()
 	if r.Method == "POST" {
 		nId := r.FormValue("id")
 		name := r.FormValue("name")
@@ -146,7 +146,7 @@ func redisUpdateUser(w http.ResponseWriter, r *http.Request) {
 
 func redisDeleteUser(w http.ResponseWriter, r *http.Request) {
 	pool = initializeCache()
-	conn :=  pool.Get()
+	conn := pool.Get()
 	nId := r.FormValue("id")
 	insForm, err := conn.Do("DEL", nId)
 	if err != nil {
@@ -157,9 +157,9 @@ func redisDeleteUser(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", 301)
 }
 
-func getRedisKey(key string, value string) (string) {
+func getRedisKey(key string, value string) string {
 	pool = initializeCache()
-	conn :=  pool.Get()
+	conn := pool.Get()
 	key, err := redis.String(conn.Do("HGET", key, value))
 	if err != nil {
 		log.Error(err)
@@ -167,7 +167,7 @@ func getRedisKey(key string, value string) (string) {
 	return key
 }
 
-func covertString(key string) (int) {
+func covertString(key string) int {
 	data, err := strconv.Atoi(key)
 	if err != nil {
 		log.Error(err)
