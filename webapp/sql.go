@@ -3,8 +3,6 @@ package webapp
 import (
     "database/sql"
     log "github.com/sirupsen/logrus"
-    // "fmt"
-    // "io"
     "gopkg.in/ini.v1"
     "os"
     "net/http"
@@ -17,7 +15,7 @@ type Employee struct {
     Name  string
     City  string
     Email string
-    Date string
+    Date  string
 }
 
 var tmpl = template.Must(template.New("Employee Management Template").Parse(htmltemplate))
@@ -157,6 +155,7 @@ func createDatabaseTable() {
 
 func Index(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
+    start := time.Now()
     selDB, err := db.Query("SELECT * FROM Employee ORDER BY id DESC")
     if err != nil {
         logStdout()
@@ -194,11 +193,17 @@ func Index(w http.ResponseWriter, r *http.Request) {
         res = append(res, emp)
         logStdout()
         log.WithFields(log.Fields{
-            "request_type": "GET",
+          "request_type": "GET",
+          "response_code": 200,
+          "resonse_time": time.Since(start),
+          "request_url": r.URL.Path,
           }).Info("Get request on index page")
         logFile("access")
         log.WithFields(log.Fields{
             "request_type": "GET",
+            "response_code": 200,
+            "resonse_time": time.Since(start),
+            "request_url": r.URL.Path,
           }).Info("Get request on index page")
     }
     tmpl.ExecuteTemplate(w, "Index", res)
